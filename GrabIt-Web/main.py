@@ -57,6 +57,14 @@ def extract_media_info(url: str):
         "no_warnings": True,
         "skip_download": True,
         "extract_flat": False,
+        "extractor_args": {
+            "youtube": {
+                "player_client": ["ios", "android", "mweb"]
+            }
+        },
+        "http_headers": {
+            "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1"
+        }
     }
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         info = ydl.extract_info(url, download=False)
@@ -179,6 +187,14 @@ async def download_media(
             "quiet": True,
             "no_warnings": True,
             "merge_output_format": codec if quality not in ["mp3", "m4a"] else None,
+            "extractor_args": {
+                "youtube": {
+                    "player_client": ["ios", "android", "mweb"]
+                }
+            },
+            "http_headers": {
+                "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1"
+            }
         }
 
         if postprocessors:
