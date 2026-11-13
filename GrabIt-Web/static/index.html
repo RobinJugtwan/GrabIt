@@ -1,367 +1,646 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>THE DARK KNIGHT | Gotham City Archives</title>
-  <meta name="description" content="A Gotham City fan experience honoring Batman. Explore characters, WayneTech gadgets, vehicles, and iconic quotes in a dark, atmospheric interface." />
-  
-  <!-- Favicon -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 60' fill='%23f5b301'><path d='M50 8 C46 16 38 20 28 20 C18 20 8 10 2 24 C-2 33 0 46 12 50 C24 53 38 43 45 35 C48 31 52 31 55 35 C62 43 76 53 88 50 C100 46 102 33 98 24 C92 10 82 20 72 20 C62 20 54 16 50 8 Z'/></svg>" />
-  
-  <!-- Google Fonts: Orbitron for tech/gotham headings, Inter for clean typography -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-  
-  <!-- Main Stylesheet -->
-  <link rel="stylesheet" href="./style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GrabIt Web — Universal Media Downloader</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚀</text></svg>">
+  <style>
+    /* Custom scrollbars */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(150, 150, 150, 0.3); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(150, 150, 150, 0.5); }
+
+    /* Theme presets */
+    .theme-neon {
+      --bg-main: #0f111a;
+      --bg-card: #181b29;
+      --bg-input: #212538;
+      --border-color: #2b304c;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --accent: #e94560;
+      --accent-hover: #ff6b81;
+    }
+    .theme-oled {
+      --bg-main: #000000;
+      --bg-card: #0a0a0c;
+      --bg-input: #141418;
+      --border-color: #22222a;
+      --text-main: #ffffff;
+      --text-muted: #71717a;
+      --accent: #06b6d4;
+      --accent-hover: #22d3ee;
+    }
+    .theme-minimal {
+      --bg-main: #f8fafc;
+      --bg-card: #ffffff;
+      --bg-input: #f1f5f9;
+      --border-color: #e2e8f0;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --accent: #3b82f6;
+      --accent-hover: #2563eb;
+    }
+
+    body {
+      background-color: var(--bg-main);
+      color: var(--text-main);
+    }
+    .card-surface {
+      background-color: var(--bg-card);
+      border-color: var(--border-color);
+    }
+    .input-surface {
+      background-color: var(--bg-input);
+      border-color: var(--border-color);
+      color: var(--text-main);
+    }
+    .accent-btn {
+      background-color: var(--accent);
+      color: #ffffff;
+    }
+    .accent-btn:hover {
+      background-color: var(--accent-hover);
+    }
+    .accent-text {
+      color: var(--accent);
+    }
+  </style>
 </head>
-<body class="theme-dark">
-  <!-- Subtle Gotham Rain Canvas Overlay -->
-  <canvas id="rain-canvas" class="rain-canvas" aria-hidden="true"></canvas>
+<body id="appBody" class="theme-neon antialiased min-h-screen p-4 sm:p-6 lg:p-8 transition-colors duration-300">
 
-  <!-- Ambient Audio / HUD Scanline Layer -->
-  <div class="hud-scanline" aria-hidden="true"></div>
+  <div class="max-w-6xl mx-auto space-y-6">
 
-  <!-- NAVIGATION -->
-  <header class="site-header" id="header">
-    <div class="header-container">
-      <a href="#hero" class="brand-logo" aria-label="Batman Home">
-        <svg class="bat-icon" viewBox="0 0 100 60" fill="currentColor">
-          <path d="M50 8 C46 16 38 20 28 20 C18 20 8 10 2 24 C-2 33 0 46 12 50 C24 53 38 43 45 35 C48 31 52 31 55 35 C62 43 76 53 88 50 C100 46 102 33 98 24 C92 10 82 20 72 20 C62 20 54 16 50 8 Z"/>
-        </svg>
-        <span class="brand-text">
-          <span class="brand-title">DARK KNIGHT</span>
-          <span class="brand-subtitle">GOTHAM ARCHIVES</span>
-        </span>
-      </a>
+    <!-- Top Navigation & Header -->
+    <header class="card-surface border rounded-2xl p-4 sm:p-5 shadow-sm flex flex-col md:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-3 w-full md:w-auto">
+        <div class="w-11 h-11 rounded-xl bg-gradient-to-tr from-rose-500 to-indigo-600 flex items-center justify-center text-white font-black text-xl shadow-md shrink-0">
+          G
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-xl font-bold tracking-tight">GrabIt Web</h1>
+            <span class="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-rose-500/10 accent-text border border-rose-500/20">Live Edition</span>
+          </div>
+          <p class="text-xs text-[var(--text-muted)]">Universal Media Downloader & In-Browser Player</p>
+        </div>
+      </div>
 
-      <nav class="nav-links" id="nav-links">
-        <a href="#about" class="nav-link">Origin</a>
-        <a href="#characters" class="nav-link">Dossiers</a>
-        <a href="#gadgets" class="nav-link">WayneTech</a>
-        <a href="#quotes" class="nav-link">Transcripts</a>
+      <!-- Navigation Tabs -->
+      <nav class="flex items-center gap-1.5 p-1 rounded-xl bg-[var(--bg-main)] border border-[var(--border-color)] overflow-x-auto w-full md:w-auto text-xs">
+        <button onclick="switchTab('single')" id="tabBtn-single" class="tab-btn px-3 py-1.5 rounded-lg font-medium transition-all bg-[var(--bg-card)] shadow-xs">
+          ⚡ Single Download
+        </button>
+        <button onclick="switchTab('batch')" id="tabBtn-batch" class="tab-btn px-3 py-1.5 rounded-lg font-medium transition-all text-[var(--text-muted)] hover:text-[var(--text-main)]">
+          📑 Batch & Playlist
+        </button>
+        <button onclick="switchTab('library')" id="tabBtn-library" class="tab-btn px-3 py-1.5 rounded-lg font-medium transition-all text-[var(--text-muted)] hover:text-[var(--text-main)]">
+          📜 Library (<span id="libBadgeCount">0</span>)
+        </button>
       </nav>
 
-      <div class="nav-actions">
-        <!-- Detective Mode Switch -->
-        <button id="detective-mode-btn" class="hud-btn" title="Toggle WayneTech Detective HUD" aria-label="Toggle Detective Mode">
-          <span class="hud-indicator"></span>
-          <span class="hud-label">DETECTIVE MODE</span>
-        </button>
-
-        <!-- Rain Toggle -->
-        <button id="rain-toggle-btn" class="icon-toggle-btn" title="Toggle Gotham Weather" aria-label="Toggle Rain">
-          <svg class="toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M20 16.58A5 5 0 0 0 18 7h-1.26A8 8 0 1 0 4 15.25"></path>
-            <path d="M8 19v2M8 13v2M12 21v2M12 15v2M16 19v2M16 13v2"></path>
-          </svg>
-        </button>
-
-        <!-- Mobile Menu Hamburger -->
-        <button id="mobile-menu-btn" class="mobile-menu-btn" aria-label="Toggle navigation menu">
-          <span></span><span></span><span></span>
-        </button>
+      <!-- Theme Selector -->
+      <div class="flex items-center gap-2 self-end md:self-auto">
+        <span class="text-xs text-[var(--text-muted)] hidden sm:inline">Theme:</span>
+        <select onchange="changeTheme(this.value)" class="input-surface border text-xs rounded-lg px-2.5 py-1.5 focus:outline-none cursor-pointer">
+          <option value="theme-neon">⚡ Neon Dark</option>
+          <option value="theme-oled">🌑 OLED Pitch</option>
+          <option value="theme-minimal">☀️ Clean Slate</option>
+        </select>
       </div>
+    </header>
+
+    <!-- Error Alert Banner -->
+    <div id="errorBanner" class="hidden bg-rose-500/10 border border-rose-500/30 text-rose-500 p-4 rounded-xl text-xs flex items-center justify-between">
+      <span id="errorMessage">Error loading media.</span>
+      <button onclick="document.getElementById('errorBanner').classList.add('hidden')" class="font-bold">✕</button>
     </div>
-  </header>
 
-  <main>
-    <!-- HERO SECTION -->
-    <section id="hero" class="hero-section">
-      <!-- Bat-Signal Spotlight in Sky -->
-      <div class="batsignal-backdrop" aria-hidden="true">
-        <div class="spotlight-beam"></div>
-        <div class="batsignal-emblem">
-          <svg viewBox="0 0 100 60" fill="currentColor">
-            <path d="M50 8 C46 16 38 20 28 20 C18 20 8 10 2 24 C-2 33 0 46 12 50 C24 53 38 43 45 35 C48 31 52 31 55 35 C62 43 76 53 88 50 C100 46 102 33 98 24 C92 10 82 20 72 20 C62 20 54 16 50 8 Z"/>
-          </svg>
-        </div>
-      </div>
+    <!-- ================= TAB 1: SINGLE DOWNLOAD ================= -->
+    <div id="tabContent-single" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-      <div class="hero-content">
-        <div class="hero-tagline-wrapper">
-          <span class="tactical-dot"></span>
-          <span id="hero-tagline" class="hero-tagline">GOTHAM'S SILENT GUARDIAN</span>
-          <span class="coordinate-stamp">[40°42'46"N 74°00'21"W]</span>
-        </div>
+      <!-- Left 2 Cols: Main Input & Action Area -->
+      <div class="lg:col-span-2 space-y-6">
 
-        <h1 id="hero-title" class="hero-title">
-          I AM VENGEANCE.<br />
-          <span class="accent-text">I AM THE NIGHT.</span>
-        </h1>
-
-        <p id="hero-description" class="hero-description">
-          Operating from the shadows of Gotham City, the Dark Knight wages a relentless war against crime and corruption. Armed with peerless intellect, physical perfection, and cutting-edge Wayne Enterprises technology.
-        </p>
-
-        <div class="hero-cta-group">
-          <a href="#characters" class="btn btn-primary">
-            <span>Explore Character Dossiers</span>
-            <svg viewBox="0 0 20 20" fill="currentColor" class="btn-arrow"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
-          </a>
-          <a href="#gadgets" class="btn btn-secondary">
-            <span>WayneTech Applied Sciences</span>
-          </a>
-        </div>
-
-        <!-- Quick Stats Ribbon -->
-        <div class="hero-stats-grid" id="hero-stats">
-          <!-- Populated dynamically from data.js -->
-        </div>
-      </div>
-
-      <!-- Scroll Indicator -->
-      <a href="#about" class="scroll-down-hint" aria-label="Scroll to about section">
-        <span>DESCEND</span>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M7 13l5 5 5-5M7 6l5 5 5-5"/>
-        </svg>
-      </a>
-    </section>
-
-    <!-- ORIGIN & INTRO SECTION -->
-    <section id="about" class="section about-section">
-      <div class="container">
-        <div class="section-badge">CRIME ALLEY TO THE BATCAVE</div>
-        <h2 class="section-title">Forged in Tragedy, Devoted to Justice</h2>
-        <p class="section-lead">
-          Young Bruce Wayne took a vow by candlelight to rid Gotham of the evils that took his parents. Here is how that oath evolved into a symbol feared by criminals everywhere.
-        </p>
-
-        <div class="about-grid">
-          <div class="about-story-card">
-            <div class="story-corner top-left"></div>
-            <div class="story-corner bottom-right"></div>
-            
-            <h3 class="story-heading">The Man Behind The Mask</h3>
-            <p class="story-p">
-              Bruce spent decades traversing the globe, learning martial arts from shadowy masters, forensic criminology from top detectives, and stealth infiltration from masters of espionage.
-            </p>
-            <p class="story-p">
-              Upon returning to Gotham, he recognized that brute force alone would not suffice. Gotham's criminal underworld was a superstitious and cowardly lot. To shake their foundation, he needed to become an idea—an immortal legend that could strike anywhere from the dark.
-            </p>
-
-            <div class="story-quote-box">
-              <span class="quote-symbol">“</span>
-              <p>Criminals are like weeds, Alfred. Pull one up, another grows in its place. But fear... fear makes them hesitate.</p>
-              <span class="quote-author">— Bruce Wayne</span>
+        <!-- Input Card -->
+        <div class="card-surface border rounded-2xl p-6 shadow-sm space-y-4">
+          <div class="flex items-center justify-between">
+            <label class="text-xs font-bold uppercase tracking-wider text-[var(--text-muted)]">Media Link / URL</label>
+            <div class="flex items-center gap-1.5">
+              <span class="text-xs text-[var(--text-muted)] hidden sm:inline">Samples:</span>
+              <button onclick="quickFill('https://www.youtube.com/watch?v=dQw4w9WgXcQ')" class="px-2 py-0.5 rounded text-[11px] input-surface border hover:border-rose-500 transition-colors">YouTube</button>
+              <button onclick="quickFill('https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4')" class="px-2 py-0.5 rounded text-[11px] input-surface border hover:border-rose-500 transition-colors">Direct MP4</button>
             </div>
           </div>
 
-          <div class="about-pillars">
-            <div class="pillar-card">
-              <div class="pillar-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                </svg>
-              </div>
-              <div class="pillar-content">
-                <h4>The Absolute Rule</h4>
-                <p>Never crossing the line to take a life. The singular boundary keeping Batman from becoming the very abyss he stares into.</p>
-              </div>
+          <div class="flex items-center gap-2">
+            <div class="relative flex-1">
+              <input id="singleUrl" type="text" placeholder="Paste link (YouTube, TikTok, Twitter/X, Instagram, Pinterest, Reddit, etc.)..."
+                     class="w-full pl-4 pr-10 py-3 rounded-xl input-surface border text-sm focus:outline-none focus:ring-2 focus:ring-rose-500 transition-all">
+              <button onclick="document.getElementById('singleUrl').value=''; document.getElementById('previewCard').classList.add('hidden')" class="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-[var(--text-muted)] hover:text-[var(--text-main)]">✕</button>
             </div>
+            <button onclick="handleFetch()" id="btnFetch" class="accent-btn px-5 py-3 rounded-xl font-semibold text-sm shadow-md transition-all flex items-center gap-2 shrink-0">
+              <span id="fetchBtnText">Fetch Media</span>
+              <span id="fetchLoader" class="hidden animate-spin">⏳</span>
+            </button>
+          </div>
 
-            <div class="pillar-card">
-              <div class="pillar-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <circle cx="12" cy="12" r="10"/>
-                  <path d="M12 6v6l4 2"/>
-                </svg>
-              </div>
-              <div class="pillar-content">
-                <h4>World's Greatest Detective</h4>
-                <p>Forensic deductions, eidetic memory, psychological profiling, and pre-emptive tactical contingencies for every threat.</p>
-              </div>
-            </div>
-
-            <div class="pillar-card">
-              <div class="pillar-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-                  <polyline points="9 22 9 12 15 12 15 22"/>
-                </svg>
-              </div>
-              <div class="pillar-content">
-                <h4>Wayne Enterprises</h4>
-                <p>Applied Sciences division fuels aerospace prototypes, high-density armor, quantum supercomputing, and philanthropy.</p>
-              </div>
-            </div>
+          <!-- Format Quick-Select Bar -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1 text-xs">
+            <button onclick="selectPreset('best')" id="p-best" class="p-2 rounded-xl input-surface border border-rose-500 text-center font-bold">
+              <div class="font-bold accent-text">Best Quality</div>
+              <div class="text-[10px] text-[var(--text-muted)]">Max Resolution</div>
+            </button>
+            <button onclick="selectPreset('1080p')" id="p-1080p" class="p-2 rounded-xl input-surface border text-center hover:border-rose-500 transition-colors">
+              <div class="font-bold">1080p Full HD</div>
+              <div class="text-[10px] text-[var(--text-muted)]">Recommended</div>
+            </button>
+            <button onclick="selectPreset('720p')" id="p-720p" class="p-2 rounded-xl input-surface border text-center hover:border-rose-500 transition-colors">
+              <div class="font-bold">720p HD</div>
+              <div class="text-[10px] text-[var(--text-muted)]">Fast Download</div>
+            </button>
+            <button onclick="selectPreset('mp3')" id="p-mp3" class="p-2 rounded-xl input-surface border text-center hover:border-rose-500 transition-colors">
+              <div class="font-bold">MP3 Audio</div>
+              <div class="text-[10px] text-[var(--text-muted)]">320kbps Audio</div>
+            </button>
           </div>
         </div>
-      </div>
-    </section>
 
-    <!-- KEY CHARACTERS SECTION -->
-    <section id="characters" class="section characters-section">
-      <div class="container">
-        <div class="section-header-flex">
+        <!-- Detected Media & In-Browser Previewer -->
+        <div id="previewCard" class="hidden card-surface border rounded-2xl p-6 shadow-sm space-y-5">
+          <div class="flex items-center justify-between border-b border-[var(--border-color)] pb-3">
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+              <span class="text-xs font-bold uppercase tracking-wider text-[var(--text-muted)]">Media Extracted</span>
+            </div>
+            <span id="detectedPlatformBadge" class="text-[10px] font-bold px-2 py-0.5 rounded bg-rose-500/10 accent-text uppercase">YouTube</span>
+          </div>
+
+          <!-- Video / Audio Player Container -->
+          <div class="relative rounded-xl overflow-hidden bg-black/60 aspect-video border border-[var(--border-color)] flex items-center justify-center">
+            <video id="mediaPlayer" controls class="w-full h-full object-contain">
+              <source id="videoSource" src="" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+          </div>
+
+          <!-- Title & Stats -->
+          <div class="space-y-1">
+            <h2 id="mediaTitle" class="text-base sm:text-lg font-bold text-[var(--text-main)]">Video Title</h2>
+            <div class="flex flex-wrap items-center gap-3 text-xs text-[var(--text-muted)]">
+              <span>Channel: <strong id="mediaAuthor" class="text-[var(--text-main)]">Author</strong></span>
+              <span>·</span>
+              <span>Duration: <strong id="mediaDuration" class="text-[var(--text-main)]">0:00</strong></span>
+            </div>
+          </div>
+
+          <!-- Action & Format Config -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 p-4 rounded-xl input-surface border text-xs">
+            <div>
+              <label class="block font-medium text-[var(--text-muted)] mb-1">CONTAINER CODEC</label>
+              <select id="optCodec" class="w-full p-2 rounded-lg bg-[var(--bg-main)] border border-[var(--border-color)]">
+                <option value="mp4">MP4 (H.264 - Universal)</option>
+                <option value="mkv">MKV (Matroska)</option>
+                <option value="webm">WebM (VP9 / AV1)</option>
+              </select>
+            </div>
+            <div>
+              <label class="block font-medium text-[var(--text-muted)] mb-1">TARGET QUALITY</label>
+              <select id="optQuality" class="w-full p-2 rounded-lg bg-[var(--bg-main)] border border-[var(--border-color)]">
+                <option value="best">Best Available Video</option>
+                <option value="1080p">1080p Full HD</option>
+                <option value="720p">720p HD</option>
+                <option value="480p">480p SD</option>
+                <option value="mp3">MP3 Audio Only (320k)</option>
+                <option value="m4a">M4A Audio Only</option>
+              </select>
+            </div>
+            <div>
+              <label class="block font-medium text-[var(--text-muted)] mb-1">SUBTITLES (.SRT)</label>
+              <select id="optSubs" class="w-full p-2 rounded-lg bg-[var(--bg-main)] border border-[var(--border-color)]">
+                <option value="none">No Subtitles</option>
+                <option value="en">English (SRT)</option>
+                <option value="auto">Auto-Generated CC</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Start Download Button -->
+          <div class="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
+            <div class="text-xs text-[var(--text-muted)]">
+              Files stream directly to your browser's default Downloads folder.
+            </div>
+            <button onclick="triggerRealDownload()" id="btnStartDownload" class="w-full sm:w-auto accent-btn px-6 py-3 rounded-xl font-bold text-sm shadow-md transition-all flex items-center justify-center gap-2">
+              <span id="dlText">⬇ Download File</span>
+              <span id="dlLoader" class="hidden animate-spin">⏳</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Right 1 Col: Quick Tools & Engine Status -->
+      <div class="space-y-6">
+
+        <div class="card-surface border rounded-2xl p-5 shadow-sm space-y-3">
+          <h3 class="text-xs font-bold uppercase tracking-wider text-[var(--text-muted)]">Server & Engine Status</h3>
+          <div class="flex items-center justify-between p-3 rounded-xl input-surface border text-xs">
+            <span class="flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+              FastAPI + yt-dlp Backend
+            </span>
+            <span class="text-emerald-500 font-semibold">Online</span>
+          </div>
+        </div>
+
+        <div class="card-surface border rounded-2xl p-5 shadow-sm space-y-3">
+          <h3 class="text-xs font-bold uppercase tracking-wider text-[var(--text-muted)]">1000+ Supported Sites</h3>
+          <div class="grid grid-cols-2 gap-2 text-xs">
+            <div class="flex items-center gap-1.5 p-2 rounded-lg input-surface"><span class="text-rose-500">●</span> YouTube</div>
+            <div class="flex items-center gap-1.5 p-2 rounded-lg input-surface"><span class="text-pink-500">●</span> Instagram</div>
+            <div class="flex items-center gap-1.5 p-2 rounded-lg input-surface"><span class="text-cyan-500">●</span> TikTok</div>
+            <div class="flex items-center gap-1.5 p-2 rounded-lg input-surface"><span class="text-sky-500">●</span> Twitter/X</div>
+            <div class="flex items-center gap-1.5 p-2 rounded-lg input-surface"><span class="text-red-500">●</span> Pinterest</div>
+            <div class="flex items-center gap-1.5 p-2 rounded-lg input-surface"><span class="text-orange-500">●</span> Reddit</div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ================= TAB 2: BATCH & PLAYLIST MODE ================= -->
+    <div id="tabContent-batch" class="hidden space-y-6">
+      <div class="card-surface border rounded-2xl p-6 shadow-sm space-y-5">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[var(--border-color)] pb-4">
           <div>
-            <div class="section-badge">GOTHAM CITY POLICE DEPARTMENT & BATCOMPUTER FILES</div>
-            <h2 class="section-title">Classified Character Dossiers</h2>
-            <p class="section-subtitle">
-              Inspect profiles of the Dark Knight's closest allies and the dangerous rogues terrorizing Gotham's alleyways.
-            </p>
+            <h2 class="text-lg font-bold">Batch Links Downloader</h2>
+            <p class="text-xs text-[var(--text-muted)]">Paste multiple video links (one per line) to process them together.</p>
           </div>
+          <button onclick="fillBatchSamples()" class="text-xs px-3 py-1.5 rounded-lg input-surface border hover:border-rose-500 transition-colors">
+            Insert Sample URLs
+          </button>
+        </div>
 
-          <!-- Character Filter Tabs -->
-          <div class="filter-tabs" role="tablist">
-            <button class="filter-btn active" data-filter="all" role="tab" aria-selected="true">
-              All Files (<span id="count-all">0</span>)
-            </button>
-            <button class="filter-btn" data-filter="allies" role="tab" aria-selected="false">
-              Allies (<span id="count-allies">0</span>)
-            </button>
-            <button class="filter-btn" data-filter="rogues" role="tab" aria-selected="false">
-              Rogues (<span id="count-rogues">0</span>)
+        <div class="space-y-3">
+          <textarea id="batchUrlsInput" rows="4" placeholder="https://www.youtube.com/watch?v=...&#10;https://www.instagram.com/reel/...&#10;https://www.tiktok.com/@user/video/..." 
+                    class="w-full p-4 rounded-xl input-surface border text-xs font-mono focus:outline-none focus:ring-2 focus:ring-rose-500"></textarea>
+          
+          <div class="flex items-center justify-between">
+            <span class="text-xs text-[var(--text-muted)]" id="batchCountDisplay">0 URLs</span>
+            <button onclick="runBatchScan()" id="btnBatchScan" class="accent-btn px-5 py-2.5 rounded-xl font-semibold text-xs shadow-md">
+              ⚡ Scan Batch
             </button>
           </div>
         </div>
 
-        <!-- Cards Grid -->
-        <div class="characters-grid" id="characters-grid">
-          <!-- Injected via JavaScript from data.js -->
+        <div id="batchResultsList" class="space-y-3 hidden pt-3 border-t border-[var(--border-color)]">
+          <h3 class="text-xs font-bold uppercase tracking-wider text-[var(--text-muted)]">Discovered Media</h3>
+          <div id="batchItemsContainer" class="space-y-2"></div>
         </div>
-      </div>
-    </section>
-
-    <!-- GADGETS & VEHICLES SECTION -->
-    <section id="gadgets" class="section gadgets-section">
-      <div class="container">
-        <div class="section-badge">WAYNE ENTERPRISES APPLIED SCIENCES</div>
-        <h2 class="section-title">Tactical Arsenal & Vehicles</h2>
-        <p class="section-subtitle">
-          Military-grade hardware adapted for Gotham's rooftops, subterranean tunnels, and asphalt warfare.
-        </p>
-
-        <!-- Gadgets Grid -->
-        <div class="gadgets-grid" id="gadgets-grid">
-          <!-- Injected via JavaScript from data.js -->
-        </div>
-      </div>
-    </section>
-
-    <!-- QUOTES ROTATOR SECTION -->
-    <section id="quotes" class="section quotes-section">
-      <div class="container">
-        <div class="quote-chamber">
-          <div class="chamber-ambient-bat" aria-hidden="true">
-            <svg viewBox="0 0 100 60" fill="currentColor">
-              <path d="M50 8 C46 16 38 20 28 20 C18 20 8 10 2 24 C-2 33 0 46 12 50 C24 53 38 43 45 35 C48 31 52 31 55 35 C62 43 76 53 88 50 C100 46 102 33 98 24 C92 10 82 20 72 20 C62 20 54 16 50 8 Z"/>
-            </svg>
-          </div>
-
-          <div class="section-badge">GOTHAM CHRONICLES</div>
-          <h2 class="quotes-heading">Echoes From The Shadows</h2>
-
-          <!-- Quote Display -->
-          <div class="quote-card" id="quote-card">
-            <div class="quote-mark">“</div>
-            <p class="quote-text" id="quote-text">
-              <!-- Dynamically populated -->
-            </p>
-            <div class="quote-meta">
-              <h4 class="quote-speaker" id="quote-speaker"></h4>
-              <span class="quote-source" id="quote-source"></span>
-            </div>
-          </div>
-
-          <!-- Controls: Prev, Next, Dots -->
-          <div class="quote-controls">
-            <button id="prev-quote-btn" class="quote-nav-btn" aria-label="Previous Quote">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="15 18 9 12 15 6"></polyline>
-              </svg>
-            </button>
-            <div class="quote-dots" id="quote-dots">
-              <!-- Dots injected by JS -->
-            </div>
-            <button id="next-quote-btn" class="quote-nav-btn" aria-label="Next Quote">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="9 18 15 12 9 6"></polyline>
-              </svg>
-            </button>
-          </div>
-
-          <div class="quote-auto-indicator">
-            <div class="progress-bar-track">
-              <div class="progress-bar-fill" id="quote-progress"></div>
-            </div>
-            <span class="auto-label">AUTO-SCANNING FREQUENCIES (5s)</span>
-          </div>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <!-- GADGET DETAIL MODAL -->
-  <div id="gadget-modal" class="modal" role="dialog" aria-modal="true" aria-hidden="true">
-    <div class="modal-backdrop" id="modal-backdrop"></div>
-    <div class="modal-panel">
-      <button class="modal-close-btn" id="modal-close-btn" aria-label="Close modal">&times;</button>
-      <div class="modal-body" id="modal-content">
-        <!-- Rendered dynamically -->
       </div>
     </div>
+
+    <!-- ================= TAB 3: DOWNLOAD HISTORY & LIBRARY ================= -->
+    <div id="tabContent-library" class="hidden space-y-6">
+      <div class="card-surface border rounded-2xl p-6 shadow-sm space-y-5">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[var(--border-color)] pb-4">
+          <div>
+            <h2 class="text-lg font-bold">Download Library & History</h2>
+            <p class="text-xs text-[var(--text-muted)]">Saved in your browser local storage.</p>
+          </div>
+          
+          <button onclick="clearAllHistory()" class="px-3 py-1.5 rounded-lg text-xs border border-rose-500/30 text-rose-500 hover:bg-rose-500/10 transition-colors">
+            Clear History
+          </button>
+        </div>
+
+        <div id="libraryList" class="space-y-3">
+          <!-- Populated from localStorage -->
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= FOOTER: DESIGN BY ROBIN JUGTWAN ================= -->
+    <footer class="card-surface border rounded-3xl p-6 sm:p-10 shadow-sm space-y-10 mt-12 transition-colors duration-300">
+      
+      <!-- Top Section: Brand Purpose & Links -->
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-start border-b border-[var(--border-color)] pb-10">
+        
+        <!-- Left: Brand & Purpose -->
+        <div class="md:col-span-6 space-y-2">
+          <h3 class="text-xl sm:text-2xl font-bold tracking-tight text-[var(--text-main)]">Design by Robin Jugtwan</h3>
+          <p class="text-xs sm:text-sm text-[var(--text-muted)] max-w-md leading-relaxed">
+            Purpose-built to download universal media content through link. Fast, clean, and accessible anywhere.
+          </p>
+        </div>
+
+        <!-- Middle: Social Links (Instagram, Facebook, LinkedIn) -->
+        <div class="md:col-span-3 space-y-3">
+          <h4 class="text-xs font-bold uppercase tracking-wider text-[var(--text-muted)]">Social</h4>
+          <ul class="space-y-2 text-xs sm:text-sm">
+            <li>
+              <a href="https://www.instagram.com/robinjugtwan/" target="_blank" rel="noopener noreferrer" 
+                 class="text-[var(--text-main)] hover:accent-text transition-colors flex items-center gap-1.5 group">
+                <span>Instagram</span>
+                <span class="text-[10px] opacity-0 group-hover:opacity-100 transition-opacity">↗</span>
+              </a>
+            </li>
+            <li>
+              <a href="https://www.facebook.com/Robinjugtwan9456/" target="_blank" rel="noopener noreferrer" 
+                 class="text-[var(--text-main)] hover:accent-text transition-colors flex items-center gap-1.5 group">
+                <span>Facebook</span>
+                <span class="text-[10px] opacity-0 group-hover:opacity-100 transition-opacity">↗</span>
+              </a>
+            </li>
+            <li>
+              <a href="https://www.linkedin.com/in/robin-singh-45ab52278/" target="_blank" rel="noopener noreferrer" 
+                 class="text-[var(--text-main)] hover:accent-text transition-colors flex items-center gap-1.5 group">
+                <span>LinkedIn</span>
+                <span class="text-[10px] opacity-0 group-hover:opacity-100 transition-opacity">↗</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Right: Direct Contact -->
+        <div class="md:col-span-3 space-y-3">
+          <h4 class="text-xs font-bold uppercase tracking-wider text-[var(--text-muted)]">Contact</h4>
+          <ul class="space-y-2 text-xs sm:text-sm text-[var(--text-main)]">
+            <li>
+              <a href="tel:+918219613815" class="hover:accent-text transition-colors">
+                +91 82196 13815
+              </a>
+            </li>
+            <li>
+              <a href="mailto:Robinjugtwan9456@gmail.com" class="hover:accent-text transition-colors break-all">
+                Robinjugtwan9456@gmail.com
+              </a>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+
+      <!-- Center Feature: Big Minimalist Display Typography -->
+      <div class="py-6 sm:py-10 text-center select-none overflow-hidden">
+        <h2 class="text-3xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tight text-[var(--text-main)] opacity-95 transition-all">
+          Design by Robin
+        </h2>
+      </div>
+
+      <!-- Bottom Bar: Copyright & Edition -->
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-3 pt-6 border-t border-[var(--border-color)] text-xs text-[var(--text-muted)]">
+        <div>
+          © By Robin Jugtwan. All rights reserved.
+        </div>
+        <div class="font-mono tracking-wider">
+          2026 Edition
+        </div>
+      </div>
+
+    </footer>
+
   </div>
 
-  <!-- FOOTER -->
-  <footer class="site-footer">
-    <div class="container footer-content">
-      <div class="footer-brand">
-        <div class="brand-logo">
-          <svg class="bat-icon" viewBox="0 0 100 60" fill="currentColor">
-            <path d="M50 8 C46 16 38 20 28 20 C18 20 8 10 2 24 C-2 33 0 46 12 50 C24 53 38 43 45 35 C48 31 52 31 55 35 C62 43 76 53 88 50 C100 46 102 33 98 24 C92 10 82 20 72 20 C62 20 54 16 50 8 Z"/>
-          </svg>
-          <span class="brand-text">
-            <span class="brand-title">WAYNE ENTERPRISES</span>
-            <span class="brand-subtitle">APPLIED SCIENCES ARCHIVES</span>
-          </span>
-        </div>
-        <p class="footer-desc">
-          Created for fans of Gotham City and the Dark Knight legend. Built with responsive dark design, interactive dossiers, and WayneTech diagnostics.
-        </p>
-      </div>
+  <script>
+    let activeMedia = null;
+    let selectedPreset = "best";
 
-      <div class="footer-nav-col">
-        <h4>Archive Nav</h4>
-        <ul>
-          <li><a href="#hero">Command Center</a></li>
-          <li><a href="#about">The Origin Oath</a></li>
-          <li><a href="#characters">Character Dossiers</a></li>
-          <li><a href="#gadgets">Tactical Vault</a></li>
-          <li><a href="#quotes">Transcripts</a></li>
-        </ul>
-      </div>
+    // Initialize LocalStorage History
+    function getHistory() {
+      try {
+        return JSON.parse(localStorage.getItem('grabit_history') || '[]');
+      } catch (e) {
+        return [];
+      }
+    }
 
-      <div class="footer-nav-col">
-        <h4>Telemetry</h4>
-        <div class="telemetry-box">
-          <p><span class="label">LOCATION:</span> Gotham City, USA</p>
-          <p><span class="label">COORDINATES:</span> 40.7128° N, 74.0060° W</p>
-          <p><span class="label">BAT-SIGNAL STATUS:</span> <span class="status-online">ACTIVE</span></p>
-          <p><span class="label">DEFENSE RATING:</span> OMEGA PROTOCOL</p>
-        </div>
-      </div>
-    </div>
+    function saveHistory(item) {
+      const history = getHistory();
+      history.unshift(item);
+      localStorage.setItem('grabit_history', JSON.stringify(history.slice(0, 50)));
+      updateLibBadge();
+    }
 
-    <div class="footer-bottom">
-      <div class="container footer-bottom-inner">
-        <p class="disclaimer">
-          Fan-made web application inspired by Batman, DC Comics & Warner Bros. Entertainment. All character names and lore belong to their respective copyright holders.
-        </p>
-        <button id="back-to-top" class="back-to-top" aria-label="Back to top">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M18 15l-6-6-6 6"/>
-          </svg>
-          <span>ASCEND</span>
-        </button>
-      </div>
-    </div>
-  </footer>
+    function updateLibBadge() {
+      const history = getHistory();
+      document.getElementById('libBadgeCount').innerText = history.length;
+    }
+    updateLibBadge();
 
-  <!-- Scripts -->
-  <script type="module" src="./app.js"></script>
+    // Tab Switching
+    function switchTab(tabName) {
+      ['single', 'batch', 'library'].forEach(t => {
+        document.getElementById(`tabContent-${t}`).classList.add('hidden');
+        document.getElementById(`tabBtn-${t}`).classList.remove('bg-[var(--bg-card)]', 'shadow-xs', 'text-[var(--text-main)]');
+        document.getElementById(`tabBtn-${t}`).classList.add('text-[var(--text-muted)]');
+      });
+
+      document.getElementById(`tabContent-${tabName}`).classList.remove('hidden');
+      const activeBtn = document.getElementById(`tabBtn-${tabName}`);
+      activeBtn.classList.add('bg-[var(--bg-card)]', 'shadow-xs', 'text-[var(--text-main)]');
+      activeBtn.classList.remove('text-[var(--text-muted)]');
+
+      if (tabName === 'library') renderLibrary();
+    }
+
+    function changeTheme(themeClass) {
+      document.getElementById('appBody').className = `${themeClass} antialiased min-h-screen p-4 sm:p-6 lg:p-8 transition-colors duration-300`;
+    }
+
+    function selectPreset(type) {
+      selectedPreset = type;
+      ['best', '1080p', '720p', 'mp3'].forEach(p => {
+        const el = document.getElementById(`p-${p}`);
+        el.classList.remove('border-rose-500');
+        el.querySelector('div').classList.remove('accent-text');
+      });
+      const activeEl = document.getElementById(`p-${type}`);
+      activeEl.classList.add('border-rose-500');
+      activeEl.querySelector('div').classList.add('accent-text');
+
+      document.getElementById('optQuality').value = type;
+    }
+
+    function quickFill(url) {
+      document.getElementById('singleUrl').value = url;
+      handleFetch();
+    }
+
+    function showError(msg) {
+      document.getElementById('errorMessage').innerText = msg;
+      document.getElementById('errorBanner').classList.remove('hidden');
+    }
+
+    // Real API Call: Fetch Info
+    async function handleFetch() {
+      const url = document.getElementById('singleUrl').value.trim();
+      if (!url) {
+        showError("Please enter a valid media URL!");
+        return;
+      }
+      document.getElementById('errorBanner').classList.add('hidden');
+
+      const loader = document.getElementById('fetchLoader');
+      const btnText = document.getElementById('fetchBtnText');
+      loader.classList.remove('hidden');
+      btnText.innerText = "Extracting...";
+
+      try {
+        const res = await fetch("/api/info", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ url })
+        });
+
+        const json = await res.json();
+        if (!res.ok) throw new Error(json.detail || "Failed to fetch metadata");
+
+        const data = json.data;
+        activeMedia = data;
+
+        // Populate Preview Card
+        document.getElementById('mediaTitle').innerText = data.title;
+        document.getElementById('mediaAuthor').innerText = data.uploader;
+        document.getElementById('mediaDuration').innerText = data.duration;
+        document.getElementById('detectedPlatformBadge').innerText = data.platform;
+
+        const player = document.getElementById('mediaPlayer');
+        const source = document.getElementById('videoSource');
+        if (data.thumbnail) player.poster = data.thumbnail;
+        if (data.direct_url) {
+          source.src = data.direct_url;
+          player.load();
+        }
+
+        document.getElementById('previewCard').classList.remove('hidden');
+
+      } catch (err) {
+        showError(err.message);
+      } finally {
+        loader.classList.add('hidden');
+        btnText.innerText = "Fetch Media";
+      }
+    }
+
+    // Real Download Trigger
+    function triggerRealDownload() {
+      if (!activeMedia) return;
+
+      const url = document.getElementById('singleUrl').value.trim();
+      const quality = document.getElementById('optQuality').value;
+      const codec = document.getElementById('optCodec').value;
+      const subs = document.getElementById('optSubs').value;
+
+      const downloadUrl = `/api/download?url=${encodeURIComponent(url)}&quality=${quality}&codec=${codec}&subs=${subs}`;
+
+      const dlLoader = document.getElementById('dlLoader');
+      const dlText = document.getElementById('dlText');
+      dlLoader.classList.remove('hidden');
+      dlText.innerText = "Processing...";
+
+      // Trigger native browser file download
+      const iframe = document.createElement('iframe');
+      iframe.style.display = 'none';
+      iframe.src = downloadUrl;
+      document.body.appendChild(iframe);
+
+      saveHistory({
+        id: Date.now(),
+        title: activeMedia.title,
+        platform: activeMedia.platform,
+        quality: quality,
+        date: new Date().toLocaleDateString()
+      });
+
+      setTimeout(() => {
+        dlLoader.classList.add('hidden');
+        dlText.innerText = "⬇ Download File";
+      }, 3000);
+    }
+
+    // Batch Links Scan
+    function fillBatchSamples() {
+      document.getElementById('batchUrlsInput').value = 
+        "https://www.youtube.com/watch?v=dQw4w9WgXcQ\nhttps://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4";
+    }
+
+    async function runBatchScan() {
+      const text = document.getElementById('batchUrlsInput').value.trim();
+      const urls = text.split('\n').map(u => u.trim()).filter(Boolean);
+      if (urls.length === 0) return;
+
+      const btn = document.getElementById('btnBatchScan');
+      btn.innerText = "Scanning...";
+
+      try {
+        const res = await fetch("/api/batch-info", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ urls })
+        });
+        const json = await res.json();
+
+        const container = document.getElementById('batchItemsContainer');
+        container.innerHTML = '';
+
+        json.results.forEach(r => {
+          const item = r.data || { title: r.url, uploader: "Unknown" };
+          const row = document.createElement('div');
+          row.className = "p-3 rounded-xl input-surface border flex items-center justify-between text-xs";
+          row.innerHTML = `
+            <div class="truncate max-w-md">
+              <div class="font-bold truncate">${item.title}</div>
+              <div class="text-[10px] text-[var(--text-muted)]">${item.uploader}</div>
+            </div>
+            <a href="/api/download?url=${encodeURIComponent(r.url)}&quality=best" class="accent-btn px-3 py-1.5 rounded-lg font-semibold text-xs">
+              ⬇ Download
+            </a>
+          `;
+          container.appendChild(row);
+        });
+
+        document.getElementById('batchResultsList').classList.remove('hidden');
+      } catch (err) {
+        showError(err.message);
+      } finally {
+        btn.innerText = "⚡ Scan Batch";
+      }
+    }
+
+    // Library Rendering
+    function renderLibrary() {
+      const history = getHistory();
+      const list = document.getElementById('libraryList');
+      list.innerHTML = '';
+
+      if (history.length === 0) {
+        list.innerHTML = `<div class="text-center py-10 text-xs text-[var(--text-muted)]">No downloads yet. Download a media file to see it here!</div>`;
+        return;
+      }
+
+      history.forEach(h => {
+        const card = document.createElement('div');
+        card.className = "p-4 rounded-xl input-surface border flex items-center justify-between text-xs";
+        card.innerHTML = `
+          <div>
+            <div class="font-bold text-sm text-[var(--text-main)]">${h.title}</div>
+            <div class="text-[10px] text-[var(--text-muted)]">${h.platform} · ${h.quality} · ${h.date}</div>
+          </div>
+        `;
+        list.appendChild(card);
+      });
+    }
+
+    function clearAllHistory() {
+      localStorage.removeItem('grabit_history');
+      renderLibrary();
+      updateLibBadge();
+    }
+  </script>
 </body>
 </html>
